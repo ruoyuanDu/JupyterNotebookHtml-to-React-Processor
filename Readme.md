@@ -5,3 +5,8 @@
 3. In terminal run: python3 reactProcessor.py --input_folder_path './output'  
     a. this will take files from the output folder and create new react.js files in the outputReact folder.  
     b. To process a single file in the input folder, use reactProcessor.py input_fiel <file_name(no path needed as long as it's in the output folder)>. The file should be in the output folder too.
+
+
+
+htmlProcessor_python.py is for python scripts
+htmlProcessor.py is for pyspark scripts

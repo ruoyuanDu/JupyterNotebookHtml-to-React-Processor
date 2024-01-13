@@ -27,18 +27,18 @@ def processor(input_file):
                 # for lines having pattern: <span>....</span>....<span>...</span>... 
                 modified_line = '<span>' + line              
                 last_index = modified_line.rindex('</span>')
-                modified_line_final = modified_line[:last_index - 1] + '</span>' + modified_line[last_index:len(modified_line)-1] + '\n'
+                modified_line_final = modified_line[:last_index - 1] + '</span>' + modified_line[last_index:] + '\n'
                 lines[i] = modified_line_final
             elif '<span ' in line and not line.lstrip().startswith('<div ') and line.rstrip().endswith('</pre>'):
                 # for lines having pattern: <span>....</span>....</pre>              
                 modified_line = '<span>' + line               
                 last_index = modified_line.rindex('</pre>')
                 end_index = line.rfind('>')
-                modified_line_final = modified_line[:last_index - 1] + '</span>' + modified_line[last_index:end_index+1] + '\n'    
+                modified_line_final = modified_line[:last_index - 1] + '</span>' + modified_line[last_index:end_index+1] + '\n'     
                 print(modified_line_final)        
                 lines[i] = modified_line_final
             elif '<span ' in line and line.lstrip().startswith('<div '):
-                # for lines having pattern: <div> ....<span>...</span>..
+                # for lines having pattern: <div> ....<span>...</span>....
                 index = line.find('<span ')
                 modified_line = line[:index] + '<span>' + line[index:]
                 last_index = modified_line.rindex('>')
@@ -53,10 +53,9 @@ def processor(input_file):
                 # dtype: float64</span></pre>
                 index = line.find('<pre>')
                 end_index = len(line.rstrip())
-                # #  new
                 # add <span> inside <pre></pre>, e.g the line starts with <pre><span>....</span>, that's why it uses +5 to add <span> after <pre> tag
                 modified_line = line[:index + 5] + '<span>' + line[index + 5:]
-                print(modified_line)
+                # print(modified_line)
                 lines[i] = modified_line
             elif line.strip().endswith('</pre>') and not line.rstrip().startswith('<pre>'):
                 # this together with elif below adds <span> </span> to pattern: 
@@ -67,6 +66,9 @@ def processor(input_file):
                 index = line.find('</pre>')
                 modified_line = line[:index] + '</span>' +line[index:]
                 lines[i] = modified_line
+                # pattern = r"^[0-9a-zA-Z].*"
+                # if re.match(pattern, modified_line):
+                #     lines[i] = "<br />"+modified_line
             elif line.strip().startswith('<pre>') and line.rstrip().endswith('</pre>'):
                 # for lines with patter: <pre>......</pre>
                 index = line.find('<pre>')
@@ -74,20 +76,35 @@ def processor(input_file):
                 # find the index of the last > of </pre>
                 end_index = line.rfind('>')
                 modified_line = line[:index+5] + '<span>' + line[index+5: last_index] + '</span>' + line[last_index:end_index+1]
-                lines[i] = modified_line
-            # Add <br /> to Spark DataFrame output
-            if line.strip().startswith('<pre>+') or line.strip().startswith('+') or line.strip().startswith('|'):
-                lines[i] = line + '<br />'
-                if lines[i+1].strip()=="":
-                    lines[i+1] = '<span></span>'
+                lines[i] = modified_line          
             # Add <br />br /> to empty line to add space between two code lines.
             if line.strip()=="":
                 lines[i] = line + '<br />'
-            
+        
+        for i, line in enumerate(lines):
+            # Add <br /> to patterns:
+            '''
+                <br />SepalWidthCm     2.0
+                <br />PetalLengthCm    1.0
+                <br />PetalWidthCm     0.1
+            '''
+            pattern =  r"^[0-9a-zA-Z].*"
+            if re.match(pattern, line):
+                lines[i] = "<br />"+line
+            if 'Out[' in line:
+                # remove lines with Out[]
+                lines[i] = '<div></div>'
+
+
         text = ''.join(lines)
         # Remove empty <span></span>
         pattern = r'<span></span>'
         text = re.sub(pattern, '', text)
+
+        # pattern =  r"^[0-9a-zA-Z].*"
+        # replacement = r"<br />\0"
+        # text = re.sub(pattern, replacement, text)
+        # print(text)
         
         # Add <pre> and <code> 
         pattern = r'<pre>(.*?)</pre>'
