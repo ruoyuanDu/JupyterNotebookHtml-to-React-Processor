@@ -23,11 +23,11 @@ def processor(input_file):
         # text = ''.join(lines)
         
         for i, line in enumerate(lines):
-            if '<span ' in line and not line.lstrip().startswith('<div ') and not line.rstrip().endswith('</pre>'):
+            if '<span ' in line and not line.lstrip().startswith('<div ') and not line.rstrip().endswith('</pre>') and not line.lstrip().startswith('<p'):
                 # for lines having pattern: <span>....</span>....<span>...</span>... 
                 modified_line = '<span>' + line              
                 last_index = modified_line.rindex('</span>')
-                modified_line_final = modified_line[:last_index - 1] + '</span>' + modified_line[last_index:] + '\n'
+                modified_line_final = modified_line[:last_index - 1] + '</span>' + modified_line[last_index-1:] + '\n'
                 lines[i] = modified_line_final
             elif '<span ' in line and not line.lstrip().startswith('<div ') and line.rstrip().endswith('</pre>'):
                 # for lines having pattern: <span>....</span>....</pre>              
@@ -70,7 +70,7 @@ def processor(input_file):
                 # if re.match(pattern, modified_line):
                 #     lines[i] = "<br />"+modified_line
             elif line.strip().startswith('<pre>') and line.rstrip().endswith('</pre>'):
-                # for lines with patter: <pre>......</pre>
+                # for lines with pattern: <pre>......</pre>
                 index = line.find('<pre>')
                 last_index = line.rfind('</pre>')
                 # find the index of the last > of </pre>
@@ -88,8 +88,8 @@ def processor(input_file):
                 <br />PetalLengthCm    1.0
                 <br />PetalWidthCm     0.1
             '''
-            pattern =  r"^[0-9a-zA-Z].*"
-            if re.match(pattern, line):
+            pattern = r"^[0-9a-zA-Z#-].*(?<!</p>)$"
+            if re.match(pattern, line.strip()):
                 lines[i] = "<br />"+line
             if 'Out[' in line:
                 # remove lines with Out[]
