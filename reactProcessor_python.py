@@ -1,20 +1,39 @@
 import os
 import json
 import argparse
+import re
 
 def reactProcessor(input):
     inputName = str(input)
     folder_path = './output/'
-    with open(folder_path+input, 'r') as input:
-        beginning = [
-            "import React from 'react'; \n",
-            "import useCustomEffect from '../../../useCustomEffect'; \n",
-            # capitalize the first letter of the filename for the function component
-            "export default function " +"Python"+inputName.split('_')[0].capitalize()+"(){\n", 
-            "useCustomEffect()\n",
-            "return ( <div>\n"  
-        ]
+    with open(folder_path+input, 'r') as input:  
+        # text = input.read()
         htmlLines = input.readlines()
+        text = ''.join(htmlLines)
+        pattern = r'<AddAnswers answer="([A-Za-z0-9]+)" />'
+        matches = re.findall(pattern, text, flags=re.DOTALL)
+        if matches:
+            beginning = [
+                "import React from 'react'; \n",
+                "import useCustomEffect from '../../../useCustomEffect'; \n",
+
+                "import AddAnswers from '../../../js/addAnswerReveal'; \n\n",
+                # capitalize the first letter of the filename for the function component
+                "export default function " +"Python"+inputName.split('_')[0].capitalize()+"(){\n", 
+                "useCustomEffect()\n\n",
+                "return ( <div>\n"  
+            ]
+        else:
+            beginning = [
+                "import React from 'react'; \n",
+                "import useCustomEffect from '../../../useCustomEffect'; \n",
+                # capitalize the first letter of the filename for the function component
+                "export default function " +"Python"+inputName.split('_')[0].capitalize()+"(){\n", 
+                "useCustomEffect()\n",
+                "return ( <div>\n"  
+            ]
+            
+        # htmlLines = input.readlines()
         ending = [
             "</div>\n)}"
         ]
