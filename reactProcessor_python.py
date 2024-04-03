@@ -14,7 +14,9 @@ def reactProcessor(input):
         matches = re.findall(pattern, text, flags=re.DOTALL)
         if matches:
             beginning = [
+
                 "import React from 'react'; \n",
+                "import {Link} from 'react-router-dom'; \n",
                 "import useCustomEffect from '../../../useCustomEffect'; \n",
 
                 "import AddAnswers from '../../../js/addAnswerReveal'; \n\n",
@@ -26,6 +28,7 @@ def reactProcessor(input):
         else:
             beginning = [
                 "import React from 'react'; \n",
+                "import {Link} from 'react-router-dom'; \n",
                 "import useCustomEffect from '../../../useCustomEffect'; \n",
                 # capitalize the first letter of the filename for the function component
                 "export default function " +"Python"+inputName.split('_')[0].capitalize()+"(){\n", 

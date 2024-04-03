@@ -6,7 +6,6 @@ const data=[{'component': '<PythonLoopcontrolstatements />', 'path': 'python-loo
 {'component': '<PythonFunctionsdefinitionandparameters />', 'path': 'python-functions-definitionand-parameters', 'title': 'Functions Definitionand Parameters'},
 {'component': '<PythonPythonbasicslandingpage />', 'path': 'python-python-basics-landing-page', 'title': 'Python Basics Landing Page'},
 {'component': '<PythonOopclassesandobjects />', 'path': 'python-o-o-p-classes-and-objects', 'title': 'O O P Classes And Objects'},
-{'component': '<PythonModulesandlibraries  />', 'path': 'python-modules-and-libraries ', 'title': 'Modules And Libraries '},
 {'component': '<PythonDatastructurestuples />', 'path': 'python-data-structures-tuples', 'title': 'Data Structures Tuples'},
 {'component': '<PythonFunctionslambdafunctions />', 'path': 'python-functions-lambda-functions', 'title': 'Functions Lambda Functions'},
 {'component': '<PythonFunctionslocalvariableandglobalvariable />', 'path': 'python-functions-local-variableand-global-variable', 'title': 'Functions Local Variableand Global Variable'},
@@ -20,6 +19,8 @@ const data=[{'component': '<PythonLoopcontrolstatements />', 'path': 'python-loo
 {'component': '<PythonIntroductiontopython />', 'path': 'python-introduction-to-python', 'title': 'Introduction To Python'},
 {'component': '<PythonDatastructuresdictionaries />', 'path': 'python-data-structures-dictionaries', 'title': 'Data Structures Dictionaries'},
 {'component': '<PythonClassinheritance />', 'path': 'python-class-inheritance', 'title': 'Class Inheritance'},
+{'component': '<PythonDatatypes />', 'path': 'python-data-types', 'title': 'Data Types'},
 {'component': '<PythonIfelse />', 'path': 'python-if-else', 'title': 'If Else'},
 {'component': '<PythonDatastructuressets />', 'path': 'python-data-structures-sets', 'title': 'Data Structures Sets'},
+{'component': '<PythonModulesandlibraries />', 'path': 'python-modules-and-libraries', 'title': 'Modules And Libraries'},
 ]

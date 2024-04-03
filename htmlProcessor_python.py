@@ -151,7 +151,12 @@ def processor(input_file):
         # Remove empty <span></span>
         pattern = r'<span></span>'
         text = re.sub(pattern, '', text)
-        
+
+        # replace <a> tag with <Link>
+        pattern = r'<a\s+href="([^#].*?)">([^<]+)<\/a>'
+        replacement = r'<Link to="../\1">\2</Link>'
+        text = re.sub(pattern, replacement, text)
+
         output.write(text)
         
 
