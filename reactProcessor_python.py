@@ -40,8 +40,17 @@ def reactProcessor(input):
         ending = [
             "</div>\n)}"
         ]
-        lines = beginning + htmlLines+ending
+        
+        html_lines = ''.join(htmlLines)
+        #change all classname to class
+        # add = to exclude replacing classname and class ouside tags
+        final_lines = html_lines.replace('classname=', 'class=')
+        final_lines = final_lines.replace('class=', 'className=')
+
+        lines = beginning + [final_lines] + ending
+
         text = ''.join(lines)
+
     with open('./outputReact/'+"Python"+inputName+'_react.js', 'w') as output:
         output.write(text)
         

@@ -153,8 +153,9 @@ def processor(input_file):
         text = re.sub(pattern, '', text)
 
         # replace <a> tag with <Link>
-        pattern = r'<a\s+href="([^#].*?)">([^<]+)<\/a>'
-        replacement = r'<Link to="../\1">\2</Link>'
+        # pattern = r'<a\s+href="([^#].*?)">([^<]+)<\/a>'
+        pattern = r'<a\s+href="(?!.*?id="downloadData")(?!#)([^"]*)">(.*?)<\/a>'
+        replacement = r'<Link to="\1">\2</Link>'
         text = re.sub(pattern, replacement, text)
 
         output.write(text)
