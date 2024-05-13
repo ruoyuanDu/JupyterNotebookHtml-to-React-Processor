@@ -8,10 +8,11 @@ def reactProcessor(input):
     with open(folder_path+input, 'r') as input:
         beginning = [
             "import React from 'react'; \n",
-            "import useCustomEffect from '../../../useCustomEffect'; \n",
+            "import {Link} from 'react-router-dom'; \n",
+            "import {useSparkCustomEffect} from '../../useCustomEffect'; \n",
             # capitalize the first letter of the filename for the function component
             "export default function " +"Python"+inputName.split('_')[1].capitalize()+"(){\n", 
-            "useCustomEffect()\n",
+            "useSparkCustomEffect()\n",
             "return ( <div>\n"  
         ]
         htmlLines = input.readlines()

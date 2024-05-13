@@ -23,20 +23,23 @@ def processor(input_file):
         # text = ''.join(lines)
         
         for i, line in enumerate(lines):
+            # 1
             if '<span ' in line and not line.lstrip().startswith('<div ') and not line.rstrip().endswith('</pre>'):
                 # for lines having pattern: <span>....</span>....<span>...</span>... 
                 modified_line = '<span>' + line              
                 last_index = modified_line.rindex('</span>')
-                modified_line_final = modified_line[:last_index - 1] + '</span>' + modified_line[last_index:len(modified_line)-1] + '\n'
+                modified_line_final = modified_line[:last_index] + '</span>' + modified_line[last_index:] 
                 lines[i] = modified_line_final
+            # 2
             elif '<span ' in line and not line.lstrip().startswith('<div ') and line.rstrip().endswith('</pre>'):
                 # for lines having pattern: <span>....</span>....</pre>              
                 modified_line = '<span>' + line               
                 last_index = modified_line.rindex('</pre>')
                 end_index = line.rfind('>')
                 modified_line_final = modified_line[:last_index - 1] + '</span>' + modified_line[last_index:end_index+1] + '\n'    
-                print(modified_line_final)        
+                # print(modified_line_final)        
                 lines[i] = modified_line_final
+            # 3
             elif '<span ' in line and line.lstrip().startswith('<div '):
                 # for lines having pattern: <div> ....<span>...</span>..
                 index = line.find('<span ')
@@ -45,8 +48,10 @@ def processor(input_file):
                 modified_line_final = modified_line[:last_index + 1] + '</span>' + modified_line[last_index+1:] + '\n'
                 # text = text.replace(line, modified_line_final)
                 lines[i] = modified_line_final
+            # 4
             elif line.strip().startswith('<pre>') and not line.rstrip().endswith('</pre>'):
-                # this together with elif above adds <span> </span> to pattern: 
+                print(line)
+                # this together with elif below adds <span> </span> to pattern: 
                 # '''<pre> SepalLengthCm 0.828
                 # dtype: float64</pre>
                 # So we get: <pre><span> SepalLengthCm 0.828
@@ -56,17 +61,20 @@ def processor(input_file):
                 # #  new
                 # add <span> inside <pre></pre>, e.g the line starts with <pre><span>....</span>, that's why it uses +5 to add <span> after <pre> tag
                 modified_line = line[:index + 5] + '<span>' + line[index + 5:]
-                print(modified_line)
-                lines[i] = modified_line
+                # print(modified_line)
+                lines[i] = modified_line + '<br />'
+                print(lines[i])
+            # 5
             elif line.strip().endswith('</pre>') and not line.rstrip().startswith('<pre>'):
-                # this together with elif below adds <span> </span> to pattern: 
+                # this together with elif above adds <span> </span> to pattern: 
                 # '''<pre> SepalLengthCm 0.828
-                # dtype: float64</pre>
+                # dtype: float64</pre> 
                 # So we get: <pre><span> SepalLengthCm 0.828
                 # dtype: float64</span></pre>
                 index = line.find('</pre>')
                 modified_line = line[:index] + '</span>' +line[index:]
                 lines[i] = modified_line
+            # 6
             elif line.strip().startswith('<pre>') and line.rstrip().endswith('</pre>'):
                 # for lines with patter: <pre>......</pre>
                 index = line.find('<pre>')
@@ -75,8 +83,20 @@ def processor(input_file):
                 end_index = line.rfind('>')
                 modified_line = line[:index+5] + '<span>' + line[index+5: last_index] + '</span>' + line[last_index:end_index+1]
                 lines[i] = modified_line
-            # Add <br /> to Spark DataFrame output
-            if line.strip().startswith('<pre>+') or line.strip().startswith('+') or line.strip().startswith('|'):
+            # 7
+            # # Add <br /> to Spark DataFrame output
+            # # This will replace #4
+            # if line.strip().startswith('<pre>+'):
+            #     # Add <span> after <pre> first, because #5 adds </span> to </pre>
+            #     index = line.find('<pre>')
+            #     end_index = len(line.rstrip())
+            #     modified_line = line[:index + 5] + '<span>' + line[index + 5:] 
+            #     lines[i] = modified_line + '<br />'
+            #     # print(lines[i])
+            #     if lines[i+1].strip()=="":
+            #         lines[i+1] = '<span></span>'
+            # 8
+            elif line.strip().startswith('+') or line.strip().startswith('|'):
                 lines[i] = line + '<br />'
                 if lines[i+1].strip()=="":
                     lines[i+1] = '<span></span>'
@@ -93,6 +113,12 @@ def processor(input_file):
         pattern = r'<pre>(.*?)</pre>'
         replacement = r"<pre className='demo-highlight python'><code className='sourceCode'>\1</code></pre>"
         text = re.sub(pattern, replacement, text, flags=re.DOTALL)
+
+        # replace <a> tag with <Link>
+        # pattern = r'<a\s+href="([^#].*?)">([^<]+)<\/a>'
+        pattern = r'<a\s+href="(?!.*?id="downloadData")(?!#)([^"]*)">(.*?)<\/a>'
+        replacement = r'<Link to="\1">\2</Link>'
+        text = re.sub(pattern, replacement, text)
         
         # Replace { and } with '&#123;' and '&#125;'
         text = text.replace('{', '&#123;').replace('}', '&#125;')

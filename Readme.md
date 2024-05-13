@@ -9,4 +9,8 @@
 
 
 htmlProcessor_python.py is for python scripts
-htmlProcessor.py is for pyspark scripts
+
+
+For PySpark: 
+python3 htmlProcessor_pyspark.py --input_folder_path './input'  
+python3 reactProcessor_pyspark.py --input_folder_path './output' 
